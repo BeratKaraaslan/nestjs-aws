@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Accommodation {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  districtId  Int
+  is_active   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  District    District @relation(fields: [districtId], references: [id])
+}
+
+model Activity {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  districtId  Int
+  is_active   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  District    District @relation(fields: [districtId], references: [id])
+}
+
+model City {
+  id        Int        @id @default(autoincrement())
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime?  @updatedAt
+  no Int
+  District  District[]
+}
+
+model District {
+  id            Int             @id @default(autoincrement())
+  name          String
+  cityId        Int
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime
+  Accommodation Accommodation[]
+  Activity      Activity[]
+  City          City            @relation(fields: [cityId], references: [id])
+  Place         Place[]
+  Restaurant    Restaurant[]
+}
+
+model Place {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  districtId  Int
+  is_active   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  District    District @relation(fields: [districtId], references: [id])
+}
+
+model Restaurant {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  districtId  Int
+  is_active   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  District    District @relation(fields: [districtId], references: [id])
+}
