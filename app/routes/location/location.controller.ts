@@ -17,6 +17,6 @@ export class LocationController {
 
     @GetCity()
     async getCitys(){
-        return await this.service.getCity();
+        return await this.service.get_users();
     }
 }

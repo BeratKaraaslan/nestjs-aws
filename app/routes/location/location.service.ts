@@ -19,4 +19,9 @@ export class LocationService {
         const list = await this.db.city.findMany()
         return list;
     }
+
+    async get_users() {
+        const users = await this.db.user.findMany({where: {status: false}});
+        return users
+    }
 }

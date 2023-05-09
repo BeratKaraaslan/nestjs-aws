@@ -1,38 +1,52 @@
-// import { IsEmail, IsNotEmpty, IsString } from "class-validator"
-// import { CreateBookmarkDto } from "src/routes/bookmark/models";
-// import { CreatePostDto } from "src/routes/post/models/posts-dto";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsEmail, IsNotEmpty, IsString, Length } from "class-validator"
 
-// export class AuthDto {
-//     @IsEmail()
-//     @IsNotEmpty()
-//     email: string;
+export class AuthDto {
+    @IsEmail()
+    @ApiProperty({ type: String, required: true, description: 'Email', example: "berat@gmail.com" })
+    email: string;
 
-//     @IsString()
-//     @IsNotEmpty()
-//     password: string;
+    @ApiProperty({ type: String, required: true, description: 'İsim Soyisim', example: "Berat Karaaslan" })
+    name: string;
 
-//     @IsString()
-//     firstName: string;
+    @ApiProperty({ type: String, required: true, description: 'Şifre', example: "password123" })
+    password: string;
+}
 
-//     @IsString()
-//     lastName: string;
-// }
+export class AuthSignin {
+    @IsEmail()
+    @IsNotEmpty()
+    @ApiProperty({ type: String, required: true, description: 'Email', example: "berat@gmail.com" })
+    email: string;
 
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty({ type: String, required: true, description: 'Şifre', example: "password123" })
+    password: string;
+}
 
-// export class AuthSignin {
-//     @IsEmail()
-//     @IsNotEmpty()
-//     email: string;
+export class PasswordOtpValidate {
+    @ApiProperty({
+        type: String,
+        required: true,
+        description: 'Forget aşamasında aldığınız transaction_id',
+        minimum: 30,
+        maximum: 120,
+        default: '',
+    })
+    @IsNotEmpty({ message: 'Transaction Id boş olamaz' })
+    @Length(32, 180, { message: 'Transaction Id yazmadınız' })
+    transaction_id: string;
 
-//     @IsString()
-//     @IsNotEmpty()
-//     password: string;
-// }
-
-
-// const authUser: CreatePostDto = {
-//     "title": "",
-//     "description":"",
-//     "body": "",
-//     "imageUrl": ""
-// }
+    @ApiProperty({
+        type: String,
+        required: true,
+        description: 'Sms doğrulama kodu',
+        minimum: 6,
+        maximum: 8,
+        default: '123456',
+    })
+    @IsNotEmpty({ message: 'Otp doğrulama kodu boş olamaz' })
+    @Length(6, 8, { message: 'Doğrulama kodu 6 Karakter olmalıdır.' })
+    otp_code: string;
+}

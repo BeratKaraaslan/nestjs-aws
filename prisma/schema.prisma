@@ -14,7 +14,7 @@ model Accommodation {
   districtId  Int
   is_active   Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
   District    District @relation(fields: [districtId], references: [id])
 }
 
@@ -25,7 +25,7 @@ model Activity {
   districtId  Int
   is_active   Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
   District    District @relation(fields: [districtId], references: [id])
 }
 
@@ -43,7 +43,7 @@ model District {
   name          String
   cityId        Int
   createdAt     DateTime        @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime        @updatedAt
   Accommodation Accommodation[]
   Activity      Activity[]
   City          City            @relation(fields: [cityId], references: [id])
@@ -58,7 +58,7 @@ model Place {
   districtId  Int
   is_active   Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
   District    District @relation(fields: [districtId], references: [id])
 }
 
@@ -69,6 +69,25 @@ model Restaurant {
   districtId  Int
   is_active   Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
   District    District @relation(fields: [districtId], references: [id])
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  rating    Decimal?
+  status    Boolean  @default(false)
+  role_code String
+  role      UserRole @relation(fields: [role_code], references: [role_code])
+}
+
+model UserRole {
+  role_code String @unique
+  role      String
+  users     User[]
 }

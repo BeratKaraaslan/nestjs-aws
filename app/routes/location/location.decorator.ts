@@ -15,7 +15,7 @@ export function CreateCity() {
 
 export function GetCity() {
     return applyDecorators(
-      Post('/citys'),
+      Get('/citys'),
       HttpCode(200),
       ApiOperation({ summary: 'Get Citys' }),
       ApiResponse({ status: 200, description: 'OK' }),
