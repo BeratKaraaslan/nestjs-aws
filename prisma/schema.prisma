@@ -72,3 +72,22 @@ model Restaurant {
   updatedAt   DateTime
   District    District @relation(fields: [districtId], references: [id])
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  rating    Decimal?
+  status    Boolean  @default(false)
+  role_code String
+  UserRole  UserRole @relation(fields: [role_code], references: [role_code])
+}
+
+model UserRole {
+  role_code String @unique
+  role      String
+  User      User[]
+}

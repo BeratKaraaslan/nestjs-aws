@@ -4,7 +4,7 @@ import { UnauthorizedDto, NotFoundDto } from "app/core/models/default-dto";
 
 export function OpenAI() {
     return applyDecorators(
-      Get('/deneme'),
+      Post('/deneme'),
       HttpCode(200),
       ApiOperation({ summary: 'Deneme' }),
       ApiResponse({ status: 200, description: 'OK' }),
