@@ -14,11 +14,16 @@ import { CompletedDto } from 'app/core/models/default-dto';
 
 @Injectable()
 export class AuthService {
+
+    private config: ReturnType<typeof configurations>;
+
     constructor(
         private dbService: DbService,
         private jwt: JwtService,
-        private config: ConfigService,
-    ) { }
+        configService: ConfigService,
+    ) {
+        this.config = configurations(configService);
+    }
 
     async signup(user_data: AuthDto) {
         // generate the password hash
@@ -100,7 +105,7 @@ export class AuthService {
                 sub: userId,
                 email,
             };
-            const secret = configurations().secret;
+            const secret = this.config.secret;
 
             const token = await this.jwt.signAsync(
                 payload,

@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { ValidationFilter } from './core/validations/validations';
 import { GlobalExceptionFilter } from './core/validations/general.exception';
 import validation_config from './core/validations/validation_config';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -14,15 +15,17 @@ async function bootstrap() {
   });
   app.enableCors({ origin: '*' });
 
+  const configService = app.get(ConfigService);
+  const config = configurations(configService);
 
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalFilters(new ValidationFilter());
   app.useGlobalPipes(new ValidationPipe(validation_config()));
 
-  const config = new DocumentBuilder()
-    .setTitle(configurations().open_api_title)
-    .setVersion(configurations().open_api_version)
-    .setExternalDoc('openapi.json', `/${configurations().swagger_path}-json`)
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle(config.open_api_title)
+    .setVersion(config.open_api_version)
+    .setExternalDoc('openapi.json', `/${config.swagger_path}-json`)
     .addSecurity('bearer', {
       type: 'http',
       scheme: 'bearer',
@@ -35,18 +38,18 @@ async function bootstrap() {
       validatorUrl: null,
       defaultModelsExpandDepth: -1,
     },
-    customSiteTitle: configurations().open_api_title,
+    customSiteTitle: config.open_api_title,
   };
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup(
-    configurations().swagger_path,
+    config.swagger_path,
     app,
     document,
     customOptions,
   );
 
-  await app.listen(configurations().port || 3000);
+  await app.listen(config.port || 3000);
 }
 
 bootstrap();

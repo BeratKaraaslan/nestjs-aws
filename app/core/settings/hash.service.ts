@@ -7,15 +7,24 @@ import {
 import { promisify } from "util";
 import configurations from "app/core/settings/configurations";
 import * as moment from "moment";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class HashService {
+
+  private config: ReturnType<typeof configurations>;
   private iv: string = "1234567812345678";
   private key: any;
 
+  constructor(
+    configService: ConfigService,
+  ) {
+    this.config = configurations(configService);
+  }
+
   async createHash() {
     this.key = (await promisify(scrypt)(
-      configurations().secret,
+      this.config.secret,
       "salt",
       32
     )) as Buffer;

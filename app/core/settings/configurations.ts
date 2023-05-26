@@ -1,14 +1,16 @@
-export default () => ({
-	db: process.env.DATABASE_URL,
-	secret: process.env.JWT_SECRET,
+import { ConfigService } from '@nestjs/config';
+
+export default (configService: ConfigService) => ({
+	db: configService.get<string>('DATABASE_URL'),
+	secret: configService.get<string>('JWT_SECRET'),
 	open_api_title: 'Tour Guide App',
 	open_api_version: '1',
 	swagger_path: 'tour-guide-app',
-	port: process.env.PORT || 8080,
-	accessToken: process.env.ACCESS_TOKEN,
-	clientId: process.env.CLIENT_ID,
-	clientSecret: process.env.CLIENT_SECRET,
-	refreshToken: process.env.REFRESH_TOKEN,
-	user: process.env.EMAIL_USER,
-	userEmail: process.env.EMAIL_USER,
+	port: configService.get<string>('PORT') || 8080,
+	accessToken: configService.get<string>('ACCESS_TOKEN'),
+	clientId: configService.get<string>('CLIENT_ID'),
+	clientSecret: configService.get<string>('CLIENT_SECRET'),
+	refreshToken: configService.get<string>('REFRESH_TOKEN'),
+	user: configService.get<string>('EMAIL_USER'),
+	userEmail: configService.get<string>('EMAIL_USER'),
 });

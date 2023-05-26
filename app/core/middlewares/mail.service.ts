@@ -1,17 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import configurations from '../settings/configurations';
+import { ConfigService } from '@nestjs/config';
+
 
 @Injectable()
 export class MailService {
-    constructor(private readonly mailerService: MailerService) { }
+
+    private config: ReturnType<typeof configurations>;
+
+    constructor(
+        private readonly mailerService: MailerService,
+        configService: ConfigService
+    ) {
+        this.config = configurations(configService);
+    }
 
     public sendOtp(name: string, to: string, otp: string): void {
         this
             .mailerService
             .sendMail({
                 to: to,
-                from: `"Tour-Guide-App" <${configurations().userEmail}>`,
+                from: `"Tour-Guide-App" <${this.config.userEmail}>`,
                 subject: 'Tour Guide APP Verify Account',
                 template: 'email',
                 context: {
@@ -32,7 +42,7 @@ export class MailService {
             .mailerService
             .sendMail({
                 to: to,
-                from: `"Tour-Guide-App" <${configurations().userEmail}>`,
+                from: `"Tour-Guide-App" <${this.config.userEmail}>`,
                 subject: 'Tour Guide APP Account Verified',
                 template: 'verified',
                 context: {
