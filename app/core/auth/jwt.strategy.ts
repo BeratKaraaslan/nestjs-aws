@@ -6,7 +6,6 @@ import configurations from '../settings/configurations';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
 	constructor() {
-		console.log(configurations().secret);
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 			ignoreExpiration: true,

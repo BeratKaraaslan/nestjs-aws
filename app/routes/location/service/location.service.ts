@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from 'app/core/db/db.service';
-import { CreateCityDto } from './models/location-dto';
+import { CreateCityDto } from '../models/location-dto';
 import { CompletedDto } from 'app/core/models/default-dto';
 
 @Injectable()

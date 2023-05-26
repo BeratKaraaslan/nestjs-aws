@@ -8,34 +8,42 @@ datasource db {
 }
 
 model Accommodation {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  districtId  Int
-  is_active   Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  District    District @relation(fields: [districtId], references: [id])
+  id                 Int                 @id @default(autoincrement())
+  name               String
+  description        String?
+  districtId         Int
+  is_active          Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  eventId            String?
+  tripAccommodations TripAccommodation[]
+  Event              Event?              @relation(fields: [eventId], references: [code])
+  District           District            @relation(fields: [districtId], references: [id])
 }
 
 model Activity {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  districtId  Int
-  is_active   Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  District    District @relation(fields: [districtId], references: [id])
+  id             Int            @id @default(autoincrement())
+  name           String
+  description    String?
+  districtId     Int
+  is_active      Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  eventId        String?
+  tripActivities TripActivity[]
+  Event          Event?         @relation(fields: [eventId], references: [code])
+  District       District       @relation(fields: [districtId], references: [id])
 }
 
 model City {
-  id        Int        @id @default(autoincrement())
-  name      String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime?  @updatedAt
-  no        Int
-  District  District[]
+  id            Int             @id @default(autoincrement())
+  name          String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime?       @updatedAt
+  no            Int
+  District      District[]
+  PlacesToVisit PlacesToVisit[]
+  Trips         Trips[]
 }
 
 model District {
@@ -43,7 +51,7 @@ model District {
   name          String
   cityId        Int
   createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  updatedAt     DateTime?       @updatedAt
   Accommodation Accommodation[]
   Activity      Activity[]
   City          City            @relation(fields: [cityId], references: [id])
@@ -52,42 +60,130 @@ model District {
 }
 
 model Place {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
   description String?
   districtId  Int
-  is_active   Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  District    District @relation(fields: [districtId], references: [id])
+  is_active   Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  eventId     String?
+  Event       Event?      @relation(fields: [eventId], references: [code])
+  District    District    @relation(fields: [districtId], references: [id])
+  tripPlaces  TripPlace[]
 }
 
 model Restaurant {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  districtId  Int
-  is_active   Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  District    District @relation(fields: [districtId], references: [id])
+  id              Int              @id @default(autoincrement())
+  name            String
+  description     String?
+  districtId      Int
+  is_active       Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  eventId         String?
+  Event           Event?           @relation(fields: [eventId], references: [code])
+  District        District         @relation(fields: [districtId], references: [id])
+  tripRestaurants TripRestaurant[]
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  rating    Decimal?
-  status    Boolean  @default(false)
-  role_code String
-  role      UserRole @relation(fields: [role_code], references: [role_code])
+  id            Int             @id @default(autoincrement())
+  email         String          @unique
+  password      String
+  name          String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime?       @updatedAt
+  rating        Decimal?
+  status        Boolean         @default(false)
+  role_code     String
+  role          UserRole        @relation(fields: [role_code], references: [role_code])
+  userEvents    UserEvent[]
+  PlacesToVisit PlacesToVisit[]
+  Trips         Trips[]
 }
 
 model UserRole {
-  role_code String @unique
+  role_code String @id @unique
   role      String
   users     User[]
+}
+
+model Event {
+  code          String          @id @unique
+  name          String
+  category      String
+  userEvents    UserEvent[]
+  Accommodation Accommodation[]
+  Activity      Activity[]
+  Place         Place[]
+  Restaurant    Restaurant[]
+}
+
+model UserEvent {
+  userId  Int
+  eventId String
+  user    User   @relation(fields: [userId], references: [id])
+  event   Event  @relation(fields: [eventId], references: [code])
+
+  @@id([userId, eventId])
+}
+
+model PlacesToVisit {
+  userId Int
+  cityId Int
+  user   User @relation(fields: [userId], references: [id])
+  city   City @relation(fields: [cityId], references: [id])
+
+  @@id([userId, cityId])
+}
+
+model Trips {
+  id                 Int                 @id @default(autoincrement())
+  cityId             Int
+  userId             Int
+  notes              String
+  rating             Decimal?
+  tripRestaurants    TripRestaurant[]
+  tripPlaces         TripPlace[]
+  tripActivities     TripActivity[]
+  tripAccommodations TripAccommodation[]
+  user               User                @relation(fields: [userId], references: [id])
+  city               City                @relation(fields: [cityId], references: [id])
+}
+
+model TripRestaurant {
+  tripId       Int
+  restaurantId Int
+  trip         Trips      @relation(fields: [tripId], references: [id])
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+
+  @@id([tripId, restaurantId])
+}
+
+model TripPlace {
+  tripId  Int
+  placeId Int
+  trip    Trips @relation(fields: [tripId], references: [id])
+  place   Place @relation(fields: [placeId], references: [id])
+
+  @@id([tripId, placeId])
+}
+
+model TripActivity {
+  tripId     Int
+  activityId Int
+  trip       Trips    @relation(fields: [tripId], references: [id])
+  activity   Activity @relation(fields: [activityId], references: [id])
+
+  @@id([tripId, activityId])
+}
+
+model TripAccommodation {
+  tripId          Int
+  accommodationId Int
+  trip            Trips         @relation(fields: [tripId], references: [id])
+  accommodation   Accommodation @relation(fields: [accommodationId], references: [id])
+
+  @@id([tripId, accommodationId])
 }

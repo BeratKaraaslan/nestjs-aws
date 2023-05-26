@@ -4,6 +4,7 @@ import { AuthModule } from './routes/auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
+import { InterestModule } from './routes/interest/interest.module';
 
 
 @Module({
@@ -35,6 +36,7 @@ import { join } from 'path';
         },
       }),
     }),
+    InterestModule,
   ],
 })
 export class AppModule { }
