@@ -100,7 +100,7 @@ export class AuthService {
                 sub: userId,
                 email,
             };
-            const secret = process.env.JWT_SECRET;
+            const secret = configurations().secret;
 
             const token = await this.jwt.signAsync(
                 payload,

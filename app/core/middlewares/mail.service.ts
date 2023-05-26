@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
+import configurations from '../settings/configurations';
 
 @Injectable()
 export class MailService {
@@ -10,7 +11,7 @@ export class MailService {
             .mailerService
             .sendMail({
                 to: to,
-                from: `"Tour-Guide-App" <${process.env.EMAIL_USER}>`,
+                from: `"Tour-Guide-App" <${configurations().userEmail}>`,
                 subject: 'Tour Guide APP Verify Account',
                 template: 'email',
                 context: {
@@ -31,7 +32,7 @@ export class MailService {
             .mailerService
             .sendMail({
                 to: to,
-                from: `"Tour-Guide-App" <${process.env.EMAIL_USER}>`,
+                from: `"Tour-Guide-App" <${configurations().userEmail}>`,
                 subject: 'Tour Guide APP Account Verified',
                 template: 'verified',
                 context: {

@@ -5,6 +5,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 import { InterestModule } from './routes/interest/interest.module';
+import configurations from './core/settings/configurations';
 
 
 @Module({
@@ -17,15 +18,15 @@ import { InterestModule } from './routes/interest/interest.module';
           secure: false,
           auth: {
             type: "OAuth2",
-            accessToken: process.env.ACCESS_TOKEN,
-            clientId: process.env.CLIENT_ID,
-            clientSecret: process.env.CLIENT_SECRET,
-            refreshToken: process.env.REFRESH_TOKEN,
-            user: process.env.EMAIL_USER
+            accessToken: configurations().accessToken,
+            clientId: configurations().clientId,
+            clientSecret: configurations().clientSecret,
+            refreshToken: configurations().refreshToken,
+            user: configurations().user,
           },
         },
         defaults: {
-          from: `"Tour-Guide-App" <${process.env.EMAIL_USER}>`,
+          from: `"Tour-Guide-App" <${configurations().userEmail}>`,
         },
         template: {
           dir: join(__dirname, '../app/routes/auth/models/templates'),
