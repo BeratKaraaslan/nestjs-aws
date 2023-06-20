@@ -37,7 +37,6 @@
     "googleapis": "^118.0.0",
     "handlebars": "^4.7.7",
     "moment": "^2.29.4",
-    "nest-cli": "^0.0.5",
     "nodemailer": "^6.9.1",
     "passport-jwt": "^4.0.1",
     "prisma": "^4.14.1",
