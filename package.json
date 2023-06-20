@@ -38,6 +38,7 @@
     "handlebars": "^4.7.7",
     "moment": "^2.29.4",
     "nodemailer": "^6.9.1",
+    "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "prisma": "^4.14.1",
     "prisma-client": "^0.0.0",
